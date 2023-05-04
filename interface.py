@@ -4,12 +4,12 @@ import requests
 import datetime
 from vk_api.longpoll import VkLongPoll, VkEventType
 from random import randrange
-from database import *
+from data_store import *
 
 
 class VKBot:
     def __init__(self):
-        print('vkinder запущен')
+        print('vkinder запущен.', 'Введите "П" для поиска или "С" для перехода к следующему человеку.')
         self.vk = vk_api.VkApi(token=comunity_token)  # АВТОРИЗАЦИЯ СООБЩЕСТВА
         self.longpoll = VkLongPoll(self.vk)  # РАБОТА С СООБЩЕНИЯМИ
 
@@ -34,7 +34,7 @@ class VKBot:
                     first_name = i.get('first_name')
                     return first_name
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - acces_token')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     def get_sex(self, user_id):
         """ПОЛУЧЕНИЕ ПОЛА ПОЛЬЗОВАТЕЛЯ, МЕНЯЕТ НА ПРОТИВОПОЛОЖНЫЙ"""
@@ -55,7 +55,7 @@ class VKBot:
                     find_sex = 2
                     return find_sex
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - acces_token')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     def get_age_low(self, user_id):
         """ПОЛУЧЕНИЕ ВОЗРАСТА ПОЛЬЗОВАТЕЛЯ ИЛИ НИЖНЕЙ ГРАНИЦЫ ДЛЯ ПОИСКА"""
@@ -82,7 +82,7 @@ class VKBot:
                         age = event.text
                         return age
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
 
     def get_age_high(self, user_id):
@@ -110,7 +110,7 @@ class VKBot:
                         age = event.text
                         return age
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - acces_token')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     # @staticmethod
     def cities(self, user_id, city_name):
@@ -133,7 +133,7 @@ class VKBot:
                     found_city_id = i.get('id')
                     return int(found_city_id)
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     def find_city(self, user_id):
         """ПОЛУЧЕНИЕ ИНФОРМАЦИИ О ГОРОДЕ ПОЛЬЗОВАТЕЛЯ"""
@@ -152,7 +152,7 @@ class VKBot:
                     id = str(city.get('id'))
                     return id
                 elif 'city' not in i:
-                    self.write_msg(user_id, 'Введите название вашего города: ')
+                    self.write_msg(user_id, 'Введите город для поиска : ')
                     for event in self.longpoll.listen():
                         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                             city_name = event.text
@@ -162,7 +162,7 @@ class VKBot:
                             else:
                                 break
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     def find_user(self, user_id):
         """ПОИСК ЧЕЛОВЕКА ПО ПОЛУЧЕННЫМ ДАННЫМ"""
@@ -192,7 +192,7 @@ class VKBot:
                     continue
             return f'Поиск завершён'
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     def get_photos_id(self, user_id):
         """ПОЛУЧЕНИЕ ID ФОТОГРАФИЙ С РАНЖИРОВАНИЕМ В ОБРАТНОМ ПОРЯДКЕ"""
@@ -218,7 +218,7 @@ class VKBot:
             list_of_ids = sorted(dict_photos.items(), reverse=True)
             return list_of_ids
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена')
+            self.write_msg(user_id, 'Ошибка acces_token')
 
     def get_photo_1(self, user_id):
         """ПОЛУЧЕНИЕ ID ФОТОГРАФИИ № 1"""
@@ -276,10 +276,10 @@ class VKBot:
         self.person_id(offset)
         insert_data_seen_users(self.person_id(offset), offset) #offset
         self.get_photos_id(self.person_id(offset))
-        self.send_photo_1(user_id, 'Фото номер 1', offset)
+        self.send_photo_1(user_id, 'Фото 1', offset)
         if self.get_photo_2(self.person_id(offset)) != None:
-            self.send_photo_2(user_id, 'Фото номер 2', offset)
-            self.send_photo_3(user_id, 'Фото номер 3', offset)
+            self.send_photo_2(user_id, 'Фото 2', offset)
+            self.send_photo_3(user_id, 'Фото 3', offset)
         else:
             self.write_msg(user_id, f'Больше фотографий нет')
 
