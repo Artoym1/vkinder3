@@ -1,4 +1,4 @@
-from config import user_token, comm_token, offset, line
+from config import acces_token, comunity_token, offset, line
 import vk_api
 import requests
 import datetime
@@ -9,8 +9,8 @@ from database import *
 
 class VKBot:
     def __init__(self):
-        print('Vkinder запущен')
-        self.vk = vk_api.VkApi(token=comm_token)  # АВТОРИЗАЦИЯ СООБЩЕСТВА
+        print('vkinder запущен')
+        self.vk = vk_api.VkApi(token=comunity_token)  # АВТОРИЗАЦИЯ СООБЩЕСТВА
         self.longpoll = VkLongPoll(self.vk)  # РАБОТА С СООБЩЕНИЯМИ
 
     def write_msg(self, user_id, message):
@@ -22,7 +22,7 @@ class VKBot:
     def name(self, user_id):
         """ПОЛУЧЕНИЕ ИМЕНИ ПОЛЬЗОВАТЕЛЯ, КОТОРЫЙ НАПИСАЛ БОТУ"""
         url = f'https://api.vk.com/method/users.get'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'user_ids': user_id,
                   'v': '5.131'}
         repl = requests.get(url, params=params)
@@ -34,12 +34,12 @@ class VKBot:
                     first_name = i.get('first_name')
                     return first_name
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - user_token')
+            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - acces_token')
 
     def get_sex(self, user_id):
         """ПОЛУЧЕНИЕ ПОЛА ПОЛЬЗОВАТЕЛЯ, МЕНЯЕТ НА ПРОТИВОПОЛОЖНЫЙ"""
         url = f'https://api.vk.com/method/users.get'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'user_ids': user_id,
                   'fields': 'sex',
                   'v': '5.131'}
@@ -55,12 +55,12 @@ class VKBot:
                     find_sex = 2
                     return find_sex
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - user_token')
+            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - acces_token')
 
     def get_age_low(self, user_id):
         """ПОЛУЧЕНИЕ ВОЗРАСТА ПОЛЬЗОВАТЕЛЯ ИЛИ НИЖНЕЙ ГРАНИЦЫ ДЛЯ ПОИСКА"""
         url = url = f'https://api.vk.com/method/users.get'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'user_ids': user_id,
                   'fields': 'bdate',
                   'v': '5.131'}
@@ -88,7 +88,7 @@ class VKBot:
     def get_age_high(self, user_id):
         """ПОЛУЧЕНИЕ ВОЗРАСТА ПОЛЬЗОВАТЕЛЯ ИЛИ ВЕРХНЕЙ ГРАНИЦЫ ДЛЯ ПОИСКА"""
         url = url = f'https://api.vk.com/method/users.get'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'user_ids': user_id,
                   'fields': 'bdate',
                   'v': '5.131'}
@@ -110,13 +110,13 @@ class VKBot:
                         age = event.text
                         return age
         except KeyError:
-            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - user_token')
+            self.write_msg(user_id, 'Ошибка получения токена, введите токен в переменную - acces_token')
 
     # @staticmethod
     def cities(self, user_id, city_name):
         """ПОЛУЧЕНИЕ ID ГОРОДА ПОЛЬЗОВАТЕЛЯ ПО НАЗВАНИЮ"""
         url = url = f'https://api.vk.com/method/database.getCities'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'country_id': 1,
                   'q': f'{city_name}',
                   'need_all': 0,
@@ -138,7 +138,7 @@ class VKBot:
     def find_city(self, user_id):
         """ПОЛУЧЕНИЕ ИНФОРМАЦИИ О ГОРОДЕ ПОЛЬЗОВАТЕЛЯ"""
         url = f'https://api.vk.com/method/users.get'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'fields': 'city',
                   'user_ids': user_id,
                   'v': '5.131'}
@@ -167,7 +167,7 @@ class VKBot:
     def find_user(self, user_id):
         """ПОИСК ЧЕЛОВЕКА ПО ПОЛУЧЕННЫМ ДАННЫМ"""
         url = f'https://api.vk.com/method/users.search'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'v': '5.131',
                   'sex': self.get_sex(user_id),
                   'age_from': self.get_age_low(user_id),
@@ -197,7 +197,7 @@ class VKBot:
     def get_photos_id(self, user_id):
         """ПОЛУЧЕНИЕ ID ФОТОГРАФИЙ С РАНЖИРОВАНИЕМ В ОБРАТНОМ ПОРЯДКЕ"""
         url = 'https://api.vk.com/method/photos.getAll'
-        params = {'access_token': user_token,
+        params = {'access_token': acces_token,
                   'type': 'album',
                   'owner_id': user_id,
                   'extended': 1,
@@ -250,7 +250,7 @@ class VKBot:
     def send_photo_1(self, user_id, message, offset):
         """ОТПРАВКА ПЕРВОЙ ФОТОГРАФИИ"""
         self.vk.method('messages.send', {'user_id': user_id,
-                                         'access_token': user_token,
+                                         'access_token': acces_token,
                                          'message': message,
                                          'attachment': f'photo{self.person_id(offset)}_{self.get_photo_1(self.person_id(offset))}',
                                          'random_id': 0})
@@ -258,7 +258,7 @@ class VKBot:
     def send_photo_2(self, user_id, message, offset):
         """ОТПРАВКА ВТОРОЙ ФОТОГРАФИИ"""
         self.vk.method('messages.send', {'user_id': user_id,
-                                         'access_token': user_token,
+                                         'access_token': acces_token,
                                          'message': message,
                                          'attachment': f'photo{self.person_id(offset)}_{self.get_photo_2(self.person_id(offset))}',
                                          'random_id': 0})
@@ -266,7 +266,7 @@ class VKBot:
     def send_photo_3(self, user_id, message, offset):
         """ОТПРАВКА ТРЕТЬЕЙ ФОТОГРАФИИ"""
         self.vk.method('messages.send', {'user_id': user_id,
-                                         'access_token': user_token,
+                                         'access_token': acces_token,
                                          'message': message,
                                          'attachment': f'photo{self.person_id(offset)}_{self.get_photo_3(self.person_id(offset))}',
                                          'random_id': 0})
@@ -300,4 +300,4 @@ class VKBot:
         return str(list_person[2])
 
 
-bot = VKBot()
+core = VKBot()

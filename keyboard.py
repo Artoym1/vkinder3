@@ -1,4 +1,4 @@
-from main import bot
+from main import core
 import json
 
 
@@ -23,7 +23,7 @@ keyboard = {
 
 
 def sender(user_id, text):
-    bot.vk.method('messages.send', {'user_id': user_id,
+    core.vk.method('messages.send', {'user_id': user_id,
                                     'message': text,
                                     'random_id': 0,
                                     'keyboard': keyboard})
