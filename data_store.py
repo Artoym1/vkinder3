@@ -1,19 +1,14 @@
 import psycopg2
 from config import *
 
-connection = psycopg2.connect(
-    host=host,
-    user=user,
-    password=password,
-    database=db_name
-)
+conn = psycopg2.connect(host=host, user=user, password=password, database=db_name)
 
-connection.autocommit = True
+conn.autocommit = True
 
 
 def create_table_users():
     """СОЗДАНИЕ ТАБЛИЦЫ USERS (НАЙДЕННЫЕ ПОЛЬЗОВАТЕЛИ"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS users(
                 id serial,
@@ -27,7 +22,7 @@ def create_table_users():
 
 def create_table_seen_users():  # references users(vk_id)
     """СОЗДАНИЕ ТАБЛИЦЫ SEEN_USERS (ПРОСМОТРЕННЫЕ ПОЛЬЗОВАТЕЛИ"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS seen_users(
             id serial,
@@ -38,7 +33,7 @@ def create_table_seen_users():  # references users(vk_id)
 
 def insert_data_users(first_name, last_name, vk_id, vk_link):
     """ВСТАВКА ДАННЫХ В ТАБЛИЦУ USERS"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             f"""INSERT INTO users (first_name, last_name, vk_id, vk_link) 
             VALUES ('{first_name}', '{last_name}', '{vk_id}', '{vk_link}');"""
@@ -47,7 +42,7 @@ def insert_data_users(first_name, last_name, vk_id, vk_link):
 
 def insert_data_seen_users(vk_id, offset):
     """ВСТАВКА ДАННЫХ В ТАБЛИЦУ SEEN_USERS"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             f"""INSERT INTO seen_users (vk_id) 
             VALUES ('{vk_id}')
@@ -57,7 +52,7 @@ def insert_data_seen_users(vk_id, offset):
 
 def select(offset):
     """ВЫБОРКА ИЗ НЕПРОСМОТРЕННЫХ ЛЮДЕЙ"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             f"""SELECT u.first_name,
                         u.last_name,
@@ -75,7 +70,7 @@ def select(offset):
 
 def drop_users():
     """УДАЛЕНИЕ ТАБЛИЦЫ USERS КАСКАДОМ"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             """DROP TABLE IF EXISTS users CASCADE;"""
         )
@@ -84,7 +79,7 @@ def drop_users():
 
 def drop_seen_users():
     """УДАЛЕНИЕ ТАБЛИЦЫ SEEN_USERS КАСКАДОМ"""
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         cursor.execute(
             """DROP TABLE  IF EXISTS seen_users CASCADE;"""
         )
