@@ -1,4 +1,3 @@
-from config import acces_token, comunity_token, offset, line
 import vk_api
 import requests
 import datetime
@@ -10,8 +9,8 @@ from data_store import *
 class VKBot:
     def __init__(self):
         print('vkinder запущен.', 'Введите "П" для поиска или "С" для перехода к следующему человеку.')
-        self.vk = vk_api.VkApi(token=comunity_token)  # АВТОРИЗАЦИЯ СООБЩЕСТВА
-        self.longpoll = VkLongPoll(self.vk)  # РАБОТА С СООБЩЕНИЯМИ
+        self.vk = vk_api.VkApi(token=comunity_token)
+        self.longpoll = VkLongPoll(self.vk)
 
     def write_msg(self, user_id, message):
         """МЕТОД ДЛЯ ОТПРАВКИ СООБЩЕНИЙ"""
@@ -87,7 +86,7 @@ class VKBot:
 
     def get_age_high(self, user_id):
         """ПОЛУЧЕНИЕ ВОЗРАСТА ПОЛЬЗОВАТЕЛЯ ИЛИ ВЕРХНЕЙ ГРАНИЦЫ ДЛЯ ПОИСКА"""
-        url = url = f'https://api.vk.com/method/users.get'
+        url = f'https://api.vk.com/method/users.get'
         params = {'access_token': acces_token,
                   'user_ids': user_id,
                   'fields': 'bdate',
@@ -112,7 +111,7 @@ class VKBot:
         except KeyError:
             self.write_msg(user_id, 'Ошибка acces_token')
 
-    # @staticmethod
+
     def cities(self, user_id, city_name):
         """ПОЛУЧЕНИЕ ID ГОРОДА ПОЛЬЗОВАТЕЛЯ ПО НАЗВАНИЮ"""
         url = url = f'https://api.vk.com/method/database.getCities'
@@ -175,7 +174,7 @@ class VKBot:
                   'city': self.find_city(user_id),
                   'fields': 'is_closed, id, first_name, last_name',
                   'status': '1' or '6',
-                  'count': 500}
+                  'count': 100}
         resp = requests.get(url, params=params)
         resp_json = resp.json()
         try:
@@ -273,8 +272,7 @@ class VKBot:
 
     def find_persons(self, user_id, offset):
         self.write_msg(user_id, self.found_person_info(offset))
-        self.person_id(offset)
-        insert_data_seen_users(self.person_id(offset), offset) #offset
+        insert_data_seen_users(self.person_id(offset), offset)
         self.get_photos_id(self.person_id(offset))
         self.send_photo_1(user_id, 'Фото 1', offset)
         if self.get_photo_2(self.person_id(offset)) != None:
@@ -284,7 +282,7 @@ class VKBot:
             self.write_msg(user_id, f'Больше фотографий нет')
 
     def found_person_info(self, offset):
-        """ВЫВОД ИНФОРМАЦИИ О НАЙДЕННОМ ПОЛЬЗОВАТЕЛИ"""
+        """ВЫВОД ИНФОРМАЦИИ О НАЙДЕННОМ ПОЛЬЗОВАТЕЛE"""
         tuple_person = select(offset)
         list_person = []
         for i in tuple_person:

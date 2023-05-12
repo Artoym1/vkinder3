@@ -7,7 +7,6 @@ conn.autocommit = True
 
 
 def create_table_users():
-    """СОЗДАНИЕ ТАБЛИЦЫ USERS (НАЙДЕННЫЕ ПОЛЬЗОВАТЕЛИ"""
     with conn.cursor() as cursor:
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS users(
@@ -15,24 +14,22 @@ def create_table_users():
                 first_name varchar(50) NOT NULL,
                 last_name varchar(25) NOT NULL,
                 vk_id varchar(20) NOT NULL PRIMARY KEY,
-                vk_link varchar(50));"""
+                vk_link varchar(20));"""
         )
-    print("[INFO] Table USERS was created.")
 
 
-def create_table_seen_users():  # references users(vk_id)
-    """СОЗДАНИЕ ТАБЛИЦЫ SEEN_USERS (ПРОСМОТРЕННЫЕ ПОЛЬЗОВАТЕЛИ"""
+
+def create_table_seen_users():
     with conn.cursor() as cursor:
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS seen_users(
             id serial,
             vk_id varchar(50) PRIMARY KEY);"""
         )
-    print("[INFO] Table SEEN_USERS was created.")
+
 
 
 def insert_data_users(first_name, last_name, vk_id, vk_link):
-    """ВСТАВКА ДАННЫХ В ТАБЛИЦУ USERS"""
     with conn.cursor() as cursor:
         cursor.execute(
             f"""INSERT INTO users (first_name, last_name, vk_id, vk_link) 
@@ -41,7 +38,6 @@ def insert_data_users(first_name, last_name, vk_id, vk_link):
 
 
 def insert_data_seen_users(vk_id, offset):
-    """ВСТАВКА ДАННЫХ В ТАБЛИЦУ SEEN_USERS"""
     with conn.cursor() as cursor:
         cursor.execute(
             f"""INSERT INTO seen_users (vk_id) 
@@ -51,7 +47,6 @@ def insert_data_seen_users(vk_id, offset):
 
 
 def select(offset):
-    """ВЫБОРКА ИЗ НЕПРОСМОТРЕННЫХ ЛЮДЕЙ"""
     with conn.cursor() as cursor:
         cursor.execute(
             f"""SELECT u.first_name,
@@ -69,21 +64,17 @@ def select(offset):
 
 
 def drop_users():
-    """УДАЛЕНИЕ ТАБЛИЦЫ USERS КАСКАДОМ"""
-    with conn.cursor() as cursor:
+   with conn.cursor() as cursor:
         cursor.execute(
             """DROP TABLE IF EXISTS users CASCADE;"""
         )
-        print('[INFO] Table USERS was deleted.')
 
 
 def drop_seen_users():
-    """УДАЛЕНИЕ ТАБЛИЦЫ SEEN_USERS КАСКАДОМ"""
     with conn.cursor() as cursor:
         cursor.execute(
             """DROP TABLE  IF EXISTS seen_users CASCADE;"""
         )
-        print('[INFO] Table SEEN_USERS was deleted.')
 
 
 def creating_database():

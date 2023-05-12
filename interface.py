@@ -1,5 +1,5 @@
 from core import *
-
+from data_store import *
 
 for event in core.longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me:
@@ -7,6 +7,7 @@ for event in core.longpoll.listen():
         user_id = str(event.user_id)
         msg = event.text.lower()
         if command == 'привет':
+            print(user_id)
             core.write_msg(user_id, f'Привет, {core.name(user_id)}, чтобы начать поиск партнера отправь букву "П"')
 
         elif command == 'п':
@@ -15,6 +16,7 @@ for event in core.longpoll.listen():
             core.find_user(user_id)
             core.write_msg(event.user_id, f'Найдено несколько совпадений, нажмите "С" для перехода к следующему человеку')
             core.find_persons(user_id, offset)
+
 
         elif command == 'с':
             for i in line:
